@@ -1,0 +1,333 @@
+﻿(*********************************************
+
+  Import-Export
+  Version   := RSLogix 5000 v28.00
+  Owner     := Cheyenne Aberle, Ball Corporation
+  Exported  := Thu Oct 06 12:57:31 2016
+
+  Note:  File encoded in UTF-8.  Only edit file in a program 
+         which supports UTF-8 (like Notepad, not Wordpad).
+
+**********************************************)
+IE_VER := 2.19;
+
+CONTROLLER Line_Information_Standard (ProcessorType := "1769-L27ERM-QBFC1B",
+                                      Major := 28,
+                                      TimeSlice := 20,
+                                      ShareUnusedTimeSlice := 1,
+                                      CommPath := "AB_ETHIP-1\192.168.1.2",
+                                      RedundancyEnabled := 0,
+                                      KeepTestEditsOnSwitchOver := 0,
+                                      DataTablePadPercentage := 50,
+                                      SecurityCode := 0,
+                                      ChangesToDetect := 16#ffff_ffff_ffff_ffff,
+                                      SFCExecutionControl := "CurrentActive",
+                                      SFCRestartPosition := "MostRecent",
+                                      SFCLastScan := "DontScan",
+                                      SerialNumber := 16#c01e_00b4,
+                                      MatchProjectToController := No,
+                                      CanUseRPIFromProducer := No,
+                                      InhibitAutomaticFirmwareUpdate := 0,
+                                      PassThroughConfiguration := EnabledWithAppend,
+                                      DownloadProjectDocumentationAndExtendedProperties := Yes,
+                                      ReportMinorOverflow := 0)
+	DATATYPE ControlInterlock (Description := "Datatype for control interlocks to machines",
+	                           FamilyType := NoFamily)
+		CONNECTION_STATUS Connection (Description := "Machine connection status");
+		SINT ZZZZZZZZZZControlInt1 (Hidden := 1);
+		BIT run ZZZZZZZZZZControlInt1 : 0 (Description := "OK to run machine");
+		BIT jog ZZZZZZZZZZControlInt1 : 1 (Description := "OK to jog machine");
+		BIT feed ZZZZZZZZZZControlInt1 : 2 (Description := "OK to feed machine");
+		DINT commandRunSpeed (Description := "Commanded run speed");
+		DINT commandJogSpeed (Description := "Commanded jog speed");
+		DINT Time[7] (Description := "Clock time");
+		DINT MiscDINT[4] (Description := "Miscellaneous digital values");
+		REAL MiscREAL[4] (Description := "Miscellaneous analog values");
+		BOOL MiscBOOL[32] (Description := "Miscellaneous bit values");
+	END_DATATYPE
+
+	DATATYPE ConveyingControlInterlock (Description := "Datatype for control interlocks to conveying",
+	                                    FamilyType := NoFamily)
+		CONNECTION_STATUS Connection (Description := "Machine connection status");
+		BOOL Running[32] (Description := "Machine running array");
+		BOOL Feeding[32] (Description := "Machine feeding array");
+		BOOL ProductIn[32] (Description := "Product in machine array");
+		DINT CommandRunSpeed[64] (Description := "Conveyor commanded run speed array");
+		DINT Time[7] (Description := "Clock time");
+		DINT MiscDINT[8] (Description := "Miscellaneous digital values");
+		REAL MiscREAL[8] (Description := "Miscellaneous analog values");
+		BOOL MiscBOOL[64] (Description := "Miscellaneous bit values");
+	END_DATATYPE
+
+	DATATYPE ConveyingStatusInterlock (Description := "Datatype for status interlocks from conveying",
+	                                   FamilyType := NoFamily)
+		CONNECTION_STATUS Connection (Description := "Machine connection status");
+		BOOL Faulted[64] (Description := "Conveyor faulted array");
+		BOOL Ready[64] (Description := "Conveyor ready array");
+		BOOL Running[64] (Description := "Conveyor running array");
+		BOOL Auto[64] (Description := "Conveyor in auto array");
+		BOOL Run[32] (Description := "OK to run machine array");
+		BOOL Feed[32] (Description := "OK to feed machine array");
+		DINT ActualSpeed[64] (Description := "Actual speed of conveyor array");
+		DINT MiscDINT[8] (Description := "Miscellaneous digital values");
+		REAL MiscREAL[8] (Description := "Miscellaneous analog values");
+		BOOL MiscBOOL[64] (Description := "Miscellaneous bit values");
+	END_DATATYPE
+
+	DATATYPE LineInformation (Description := "Datatype for interfaces and displays",
+	                          FamilyType := NoFamily)
+		BOOL Faults[256] (Description := "Fault bit array");
+		SINT MachineStatus[32] (Description := "Machine statuses array");
+		BOOL MachineDown[32] (Description := "Machine down bit array");
+		DINT BaseProductionCount[32] (Description := "Base production counts array");
+		DINT PackProductionCount[32] (Description := "Package production counts array");
+		INT BasePerPack[32] (Description := "Base per package multiplier array");
+		SINT ConveyorStatus[64] (Description := "Conveyor statuses array");
+		DINT Recipe[128] (Description := "Recipe values");
+		DINT Time[7] (Description := "Clock time");
+		SINT DST (Description := "Daylight saving time");
+		SINT timeZone (Description := "Time zone UTC offset");
+		DINT MiscDINT[8] (Description := "Miscellaneous digital values");
+		REAL MiscREAL[8] (Description := "Miscellaneous analog values");
+		BOOL MiscBOOL[64] (Description := "Miscellaneous bit values");
+	END_DATATYPE
+
+	DATATYPE MessageControlInterlock (Description := "Datatype for message control interlocks to machines",
+	                                  FamilyType := NoFamily)
+		SINT Connection (Description := "Initial byte of memory to satisfy copy instruction");
+		SINT ZZZZZZZZZZMessageCon1 (Hidden := 1);
+		BIT run ZZZZZZZZZZMessageCon1 : 0 (Description := "OK to run machine");
+		BIT jog ZZZZZZZZZZMessageCon1 : 1 (Description := "OK to jog machine");
+		BIT feed ZZZZZZZZZZMessageCon1 : 2 (Description := "OK to feed machine");
+		DINT commandRunSpeed (Description := "Commanded run speed");
+		DINT commandJogSpeed (Description := "Commanded jog speed");
+		DINT Time[7] (Description := "Clock time");
+		DINT MiscDINT[4] (Description := "Miscellaneous digital values");
+		REAL MiscREAL[4] (Description := "Miscellaneous analog values");
+		BOOL MiscBOOL[32] (Description := "Miscellaneous bit values");
+	END_DATATYPE
+
+	DATATYPE MessageStatusInterlock (Description := "Datatype for message status interlocks from machines",
+	                                 FamilyType := NoFamily)
+		SINT Connection (Description := "Initial byte of memory to satisfy copy instruction");
+		SINT ZZZZZZZZZZMessageSta1 (Hidden := 1);
+		BIT faulted ZZZZZZZZZZMessageSta1 : 0 (Description := "Machine faulted");
+		BIT ready ZZZZZZZZZZMessageSta1 : 1 (Description := "Machine ready");
+		BIT running ZZZZZZZZZZMessageSta1 : 2 (Description := "Machine running");
+		BIT jogging ZZZZZZZZZZMessageSta1 : 3 (Description := "Machine jogging");
+		BIT feeding ZZZZZZZZZZMessageSta1 : 4 (Description := "Machine feeding");
+		BIT productIn ZZZZZZZZZZMessageSta1 : 5 (Description := "Product in machine");
+		DINT actualSpeed (Description := "Actual speed of machine");
+		DINT baseProductionCount (Description := "Base production count");
+		DINT packProductionCount (Description := "Package production count");
+		INT basePerPack (Description := "Base per package multiplier");
+		DINT MiscDINT[4] (Description := "Miscellaneous digital values");
+		REAL MiscREAL[4] (Description := "Miscellaneous analog values");
+		BOOL MiscBOOL[32] (Description := "Miscellaneous bit values");
+	END_DATATYPE
+
+	DATATYPE StatusInterlock (Description := "Datatype for status interlocks from machines",
+	                          FamilyType := NoFamily)
+		CONNECTION_STATUS Connection (Description := "Machine connection status");
+		SINT ZZZZZZZZZZStatusInte1 (Hidden := 1);
+		BIT faulted ZZZZZZZZZZStatusInte1 : 0 (Description := "Machine faulted");
+		BIT ready ZZZZZZZZZZStatusInte1 : 1 (Description := "Machine ready");
+		BIT running ZZZZZZZZZZStatusInte1 : 2 (Description := "Machine running");
+		BIT jogging ZZZZZZZZZZStatusInte1 : 3 (Description := "Machine jogging");
+		BIT feeding ZZZZZZZZZZStatusInte1 : 4 (Description := "Machine feeding");
+		BIT productIn ZZZZZZZZZZStatusInte1 : 5 (Description := "Product in machine");
+		DINT actualSpeed (Description := "Actual speed of machine");
+		DINT baseProductionCount (Description := "Base production count");
+		DINT packProductionCount (Description := "Package production count");
+		INT basePerPack (Description := "Base per package multiplier");
+		DINT MiscDINT[4] (Description := "Miscellaneous digital values");
+		REAL MiscREAL[4] (Description := "Miscellaneous analog values");
+		BOOL MiscBOOL[32] (Description := "Miscellaneous bit values");
+	END_DATATYPE
+
+	MODULE Local (Parent := "Local",
+	              ParentModPortId := 1,
+	              CatalogNumber := "1769-L27ERM-QBFC1B",
+	              Vendor := 1,
+	              ProductType := 14,
+	              ProductCode := 151,
+	              Major := 28,
+	              Minor := 11,
+	              PortLabel := "RxBACKPLANE",
+	              ChassisSize := 8,
+	              Slot := 0,
+	              Mode := 2#0000_0000_0000_0001,
+	              CompatibleModule := 0,
+	              KeyMask := 2#0000_0000_0000_0000)
+	END_MODULE
+
+	MODULE Discrete_IO (Parent := "Local",
+	                    ParentModPortId := 1,
+	                    CatalogNumber := "Embedded",
+	                    Vendor := 1,
+	                    ProductType := 7,
+	                    ProductCode := 64,
+	                    Major := 3,
+	                    Minor := 1,
+	                    PortLabel := "RxBACKPLANE",
+	                    Slot := 1,
+	                    Mode := 2#0000_0000_0000_0001,
+	                    CompatibleModule := 1,
+	                    KeyMask := 2#0000_0000_0001_1111)
+			ExtendedProp := [[[___<public><ConfigID>100</ConfigID></public>___]]]
+			ConfigData  := [24,102,1,0,0,0,0,0,0,0,0,0];
+			CONNECTION Output (Rate := 20000,
+			                   EventID := 0)
+					InputData  := [0,0,0];
+					OutputData  := [0];
+			END_CONNECTION
+
+	END_MODULE
+
+	MODULE Analog_IO (Parent := "Local",
+	                  ParentModPortId := 1,
+	                  CatalogNumber := "Embedded",
+	                  Vendor := 1,
+	                  ProductType := 10,
+	                  ProductCode := 164,
+	                  Major := 1,
+	                  Minor := 1,
+	                  PortLabel := "RxBACKPLANE",
+	                  Slot := 2,
+	                  Mode := 2#0000_0000_0000_0001,
+	                  CompatibleModule := 1,
+	                  KeyMask := 2#0000_0000_0001_1111)
+			ExtendedProp := [[[___<public><ConfigID>101</ConfigID></public>___]]]
+			ConfigData  := [94,102,1,0,0,16,0,0,2,0,0,0,16,0,0,2,0,0,0,16,0,0,2,0,0,0,16,0,0,2,0,0,0,0,0,0,0,0,0,32764,32764,-32764,0,0,0,0,0,0,32764,32764,-32764
+		,0];
+			CONNECTION Output (Rate := 80000,
+			                   EventID := 0)
+					InputData  := [0,0,0,0,0,0,0,0,250,0,0,0,0];
+					OutputData  := [0,0,0,0];
+			END_CONNECTION
+
+	END_MODULE
+
+	MODULE Counters (Parent := "Local",
+	                 ParentModPortId := 1,
+	                 CatalogNumber := "Embedded",
+	                 Vendor := 1,
+	                 ProductType := 109,
+	                 ProductCode := 71,
+	                 Major := 1,
+	                 Minor := 1,
+	                 PortLabel := "RxBACKPLANE",
+	                 Slot := 3,
+	                 Mode := 2#0000_0000_0000_0001,
+	                 CompatibleModule := 1,
+	                 KeyMask := 2#0000_0000_0001_1111)
+			ExtendedProp := [[[___<public><ConfigID>102</ConfigID></public>___]]]
+			ConfigData  := [244,102,1,256,0,0,0,0,0,2147483647,-2147483648,0,0,1,10,0,0,2147483647,-2147483648,0,0,1,10,0,0,0,0,0,0,0,0,0,0,0,0
+		,0,0,0,0,[[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]];
+			CONNECTION Output (Rate := 20000,
+			                   EventID := 0)
+					InputData  := [0,0,0,0,32,-1,0,0,0,0,32,0,0,0,0,0,32,0,0,0,0,0,0,0,0];
+					OutputData  := [0,0,0,0,0,0,0,0,0,0,[[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]];
+			END_CONNECTION
+
+	END_MODULE
+
+	TAG
+		Clock : DINT[7] (Description := "Date and Time",
+		            COMMENT[0] := "Year",
+		            COMMENT[1] := "Month",
+		            COMMENT[2] := "Day",
+		            COMMENT[3] := "Hour",
+		            COMMENT[4] := "Minute",
+		            COMMENT[5] := "Second",
+		            COMMENT[6] := "Microsecond",
+		            RADIX := Decimal) := [2016,10,6,12,57,29,440485];
+		DST : SINT (Description := "Daylight Saving Time",
+		            RADIX := Decimal) := 1;
+		LineInformation : LineInformation  := [[2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0
+				,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0
+				,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0
+				,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0
+				,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0
+				,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0
+				,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0
+				,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0
+				,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0
+				,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0],[3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[2#0,2#0,2#0,2#0
+				,2#0,2#0,2#0,2#1,2#1,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0
+				,2#0],[0,1139453,13574866,11204596,7164749,8060532,218,12,-2147483645,215,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+				,5],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,6,0,0,0,0,0,100,100,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10],[0,0,0,0,0,0,0,0,0,0
+				,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[623428891,0,1000,350,0,0,0,0,0,20,10,15
+				,0,0,20,300,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+				,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[2016,10,6,12,56,30,0],0,0,[0,0,0,0,0,0,0,0],[0.00000000e+000,0.00000000e+000
+				,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000
+				],[2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0
+				,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0
+				,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0]];
+		ONS : BOOL[32] (RADIX := Decimal) := [2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0
+				,2#0,2#0,2#0,2#0,2#0];
+		PastTime : DINT[7] (Description := "Past date and time the clock was set to",
+		            RADIX := Decimal) := [2016,10,6,12,56,30,0];
+		Test : BOOL[32] (RADIX := Decimal) := [2#1,2#1,2#1,2#1,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0
+				,2#0,2#0,2#0,2#0,2#0];
+		timeZone : STRING (Description := "Time zone") := [9,'UTC-07:00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+				];
+	END_TAG
+
+	PROGRAM MainProgram (MAIN := "MainRoutine",
+	                     MODE := 0,
+	                     DisableFlag := 0,
+	                     UseAsFolder := 0)
+		TAG
+		END_TAG
+
+		ROUTINE MainRoutine 
+				N: GSV(WallClockTime,,LocalDateTime,Clock[0])GSV(WallClockTime,,ApplyDST,DST)SSV(WallClockTime,,TimeZoneString,timeZone);
+				N: [NEQ(LineInformation.Time[0],PastTime[0]) ,NEQ(LineInformation.Time[1],PastTime[1]) ,NEQ(LineInformation.Time[2],PastTime[2]) ,NEQ(LineInformation.Time[3],PastTime[3]) ,NEQ(LineInformation.Time[4],PastTime[4]) ,NEQ(LineInformation.Time[5],PastTime[5]) ][SSV(WallClockTime,,LocalDateTime,LineInformation.Time[0]) ,CPS(LineInformation.Time[0],PastTime[0],7) ];
+				N: NOP();
+				RC: "Downtime";
+				N: XIC(Test[0])CMP(Clock[4] MOD 10<3)OTE(LineInformation.MachineDown[0]);
+				N: XIC(Test[1])CMP(Clock[4] MOD 30<2)OTE(LineInformation.MachineDown[1])OTE(LineInformation.MachineDown[2])OTE(LineInformation.MachineDown[3]);
+				N: XIC(Test[2])CMP(Clock[4] MOD 20<6)OTE(LineInformation.MachineDown[4])OTE(LineInformation.MachineDown[5])OTE(LineInformation.MachineDown[6]);
+				N: XIC(Test[3])CMP(Clock[4] MOD 25<8)OTE(LineInformation.MachineDown[7])OTE(LineInformation.MachineDown[8]);
+				RC: "Production";
+				N: XIO(LineInformation.MachineDown[0])[XIC(Clock[6].19) ONS(ONS[0]) [XIO(LineInformation.MachineDown[1]) ADD(1,LineInformation.BaseProductionCount[1],LineInformation.BaseProductionCount[1]) ADD(12,LineInformation.BaseProductionCount[2],LineInformation.BaseProductionCount[2]) ADD(10,LineInformation.BaseProductionCount[3],LineInformation.BaseProductionCount[3]) ,XIO(LineInformation.MachineDown[4]) ADD(8,LineInformation.BaseProductionCount[4],LineInformation.BaseProductionCount[4]) ADD(9,LineInformation.BaseProductionCount[5],LineInformation.BaseProductionCount[5]) ] ,XIO(LineInformation.MachineDown[7]) AFI() [XIC(Clock[4].0) ONS(ONS[1]) ADD(1,LineInformation.BaseProductionCount[7],LineInformation.BaseProductionCount[7]) ,XIC(Clock[4].2) ONS(ONS[2]) ADD(1,LineInformation.BaseProductionCount[8],LineInformation.BaseProductionCount[8]) ] ];
+		END_ROUTINE
+
+		CHILD_PROGRAMS
+		END_CHILD_PROGRAMS
+
+	END_PROGRAM
+
+	TASK MainTask (Type := CONTINUOUS,
+	               Rate := 10,
+	               Priority := 10,
+	               Watchdog := 500,
+	               DisableUpdateOutputs := No,
+	               InhibitTask := No)
+			MainProgram;
+	END_TASK
+
+CONFIG CST(SystemTimeMasterID := 0) END_CONFIG
+
+CONFIG EthernetNetwork(SupervisorModeEnabled := 0,
+	                                 SupervisorPrecedence := 0,
+	                                 BeaconInterval := 400,
+	                                 BeaconTimeout := 1960,
+	                                 VLANID := 0) END_CONFIG
+
+CONFIG EthernetPort1(Label := "1",
+	                             PortEnabled := 1) END_CONFIG
+
+CONFIG EthernetPort2(Label := "2",
+	                             PortEnabled := 1) END_CONFIG
+
+CONFIG TimeSynchronize(Priority1 := 128,
+	                                 Priority2 := 128,
+	                                 PTPEnable := 0) END_CONFIG
+
+CONFIG WallClockTime(LocalTimeAdjustment := 0,
+	                     TimeZone := 0) END_CONFIG
+
+END_CONTROLLER
+
