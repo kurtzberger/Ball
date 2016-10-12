@@ -3,7 +3,7 @@
   Import-Export
   Version   := RSLogix 5000 v28.00
   Owner     := Cheyenne Aberle, Ball Corporation
-  Exported  := Thu Oct 06 12:57:31 2016
+  Exported  := Wed Oct 12 12:33:01 2016
 
   Note:  File encoded in UTF-8.  Only edit file in a program 
          which supports UTF-8 (like Notepad, not Wordpad).
@@ -81,7 +81,8 @@ CONTROLLER Line_Information_Standard (ProcessorType := "1769-L27ERM-QBFC1B",
 		BOOL MachineDown[32] (Description := "Machine down bit array");
 		DINT BaseProductionCount[32] (Description := "Base production counts array");
 		DINT PackProductionCount[32] (Description := "Package production counts array");
-		INT BasePerPack[32] (Description := "Base per package multiplier array");
+		INT ActualBasePerPack[32] (Description := "Actual base per package multiplier array");
+		INT NominalBasePerPack[32] (Description := "Nominal base per package multiplier array");
 		SINT ConveyorStatus[64] (Description := "Conveyor statuses array");
 		DINT Recipe[128] (Description := "Recipe values");
 		DINT Time[7] (Description := "Clock time");
@@ -241,9 +242,7 @@ CONTROLLER Line_Information_Standard (ProcessorType := "1769-L27ERM-QBFC1B",
 		            COMMENT[4] := "Minute",
 		            COMMENT[5] := "Second",
 		            COMMENT[6] := "Microsecond",
-		            RADIX := Decimal) := [2016,10,6,12,57,29,440485];
-		DST : SINT (Description := "Daylight Saving Time",
-		            RADIX := Decimal) := 1;
+		            RADIX := Decimal) := [2017,3,12,3,30,17,461325];
 		LineInformation : LineInformation  := [[2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0
 				,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0
 				,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0
@@ -253,25 +252,34 @@ CONTROLLER Line_Information_Standard (ProcessorType := "1769-L27ERM-QBFC1B",
 				,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0
 				,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0
 				,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0
-				,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0],[3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[2#0,2#0,2#0,2#0
+				,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0],[3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[2#1,2#1,2#1,2#1
 				,2#0,2#0,2#0,2#1,2#1,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0
-				,2#0],[0,1139453,13574866,11204596,7164749,8060532,218,12,-2147483645,215,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+				,2#0],[0,1143843,13627546,11248496,7188101,8086803,218,12,-2147483645,215,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 				,5],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,6,0,0,0,0,0,100,100,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10],[0,0,0,0,0,0,0,0,0,0
-				,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[623428891,0,1000,350,0,0,0,0,0,20,10,15
-				,0,0,20,300,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-				,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[2016,10,6,12,56,30,0],0,0,[0,0,0,0,0,0,0,0],[0.00000000e+000,0.00000000e+000
-				,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000
-				],[2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0
+				,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+				,0,0,0,0,0],[623428891,0,1000,350,0,0,0,0,0,20,10,15,0,0,20,300,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+				,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[2016,10,7,12,55
+				,0,0],1,-7,[0,0,0,0,0,0,0,0],[0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000,0.00000000e+000
+				,0.00000000e+000,0.00000000e+000,0.00000000e+000],[2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0
 				,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0
-				,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0]];
+				,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0]];
 		ONS : BOOL[32] (RADIX := Decimal) := [2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0
 				,2#0,2#0,2#0,2#0,2#0];
-		PastTime : DINT[7] (Description := "Past date and time the clock was set to",
-		            RADIX := Decimal) := [2016,10,6,12,56,30,0];
+		pastDST : SINT (Description := "Past state daylight savings time was sycronized",
+		            RADIX := Decimal) := 1;
+		PastTime : DINT[7] (Description := "Past time the clock was sycronized",
+		            RADIX := Decimal) := [2016,10,7,12,55,0,0];
+		pastTimeZone : SINT (Description := "Past UTC offset time zone was syncronized",
+		            RADIX := Decimal) := -7;
 		Test : BOOL[32] (RADIX := Decimal) := [2#1,2#1,2#1,2#1,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0,2#0
 				,2#0,2#0,2#0,2#0,2#0];
-		timeZone : STRING (Description := "Time zone") := [9,'UTC-07:00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
-				];
+		timeZoneStrings : STRING[6] (Description := "Time zone") := [[9,'UTC-05:00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+				],[9,'UTC-06:00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+				],[9,'UTC-07:00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+				],[9,'UTC-08:00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+				],[9,'UTC-09:00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+				],[9,'UTC-10:00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00$00'
+				]];
 	END_TAG
 
 	PROGRAM MainProgram (MAIN := "MainRoutine",
@@ -282,9 +290,7 @@ CONTROLLER Line_Information_Standard (ProcessorType := "1769-L27ERM-QBFC1B",
 		END_TAG
 
 		ROUTINE MainRoutine 
-				N: GSV(WallClockTime,,LocalDateTime,Clock[0])GSV(WallClockTime,,ApplyDST,DST)SSV(WallClockTime,,TimeZoneString,timeZone);
-				N: [NEQ(LineInformation.Time[0],PastTime[0]) ,NEQ(LineInformation.Time[1],PastTime[1]) ,NEQ(LineInformation.Time[2],PastTime[2]) ,NEQ(LineInformation.Time[3],PastTime[3]) ,NEQ(LineInformation.Time[4],PastTime[4]) ,NEQ(LineInformation.Time[5],PastTime[5]) ][SSV(WallClockTime,,LocalDateTime,LineInformation.Time[0]) ,CPS(LineInformation.Time[0],PastTime[0],7) ];
-				N: NOP();
+				N: [NEQ(LineInformation.DST,pastDST) ,NEQ(LineInformation.timeZone,pastTimeZone) ,NEQ(LineInformation.Time[0],PastTime[0]) ,NEQ(LineInformation.Time[1],PastTime[1]) ,NEQ(LineInformation.Time[2],PastTime[2]) ,NEQ(LineInformation.Time[3],PastTime[3]) ,NEQ(LineInformation.Time[4],PastTime[4]) ,NEQ(LineInformation.Time[5],PastTime[5]) ][SSV(WallClockTime,,ApplyDST,LineInformation.DST) ,MOV(LineInformation.DST,pastDST) ,EQU(LineInformation.timeZone,-5) SSV(WallClockTime,,TimeZoneString,timeZoneStrings[0]) ,EQU(LineInformation.timeZone,-6) SSV(WallClockTime,,TimeZoneString,timeZoneStrings[1]) ,EQU(LineInformation.timeZone,-7) SSV(WallClockTime,,TimeZoneString,timeZoneStrings[2]) ,EQU(LineInformation.timeZone,-8) SSV(WallClockTime,,TimeZoneString,timeZoneStrings[3]) ,EQU(LineInformation.timeZone,-9) SSV(WallClockTime,,TimeZoneString,timeZoneStrings[4]) ,EQU(LineInformation.timeZone,-10) SSV(WallClockTime,,TimeZoneString,timeZoneStrings[5]) ,MOV(LineInformation.timeZone,pastTimeZone) ,SSV(WallClockTime,,LocalDateTime,LineInformation.Time[0]) ,CPS(LineInformation.Time[0],PastTime[0],7) ];
 				RC: "Downtime";
 				N: XIC(Test[0])CMP(Clock[4] MOD 10<3)OTE(LineInformation.MachineDown[0]);
 				N: XIC(Test[1])CMP(Clock[4] MOD 30<2)OTE(LineInformation.MachineDown[1])OTE(LineInformation.MachineDown[2])OTE(LineInformation.MachineDown[3]);
